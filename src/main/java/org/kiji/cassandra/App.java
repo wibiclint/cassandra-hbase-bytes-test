@@ -17,7 +17,7 @@ public class App {
   public static void main(String[] args) {
 
     // Connect to the cluster and open a session
-    Cluster cluster = Cluster.builder().addContactPoint("localhost").build();
+    Cluster cluster = Cluster.builder().addContactPoint("172.16.7.2").build();
     Session session = cluster.connect();
 
     // Create the keyspace and table
