@@ -71,18 +71,20 @@ public class App {
     System.out.println("Raw byte buffer: " + nameReadAsBlobByteBuffer);
 
     // This is what we would pass to the normal Kiji code (that is designed to work with HBase):
-    byte[] nameReadAsBlobByteArray = Bytes.toBytes(nameReadAsBlobByteBuffer);
-
+    byte[] nameReadAsBlobByteArray = new byte[nameReadAsBlobByteBuffer.remaining()];
+    nameReadAsBlobByteBuffer.get(nameReadAsBlobByteArray);
+    
     // Now convert back to a string and check
     String nameReadAsBlobString = Bytes.toString(nameReadAsBlobByteArray);
 
     if (!nameReadAsBlobString.equals(name)) {
       System.err.println("Problem reading back blob!");
-      System.err.println("Expected to read back " + name);
-      System.err.println("Got instead:");
-      System.err.println(nameReadAsBlobString);
+      System.err.println("Expected to read back >:" + name +":<");
+      System.err.println("Got instead >:" + nameReadAsBlobString + ":<");
       System.err.println("Client -> table byte[] = " + nameToWriteAsByteArray);
       System.err.println("Table -> client byte[] = " + nameReadAsBlobByteArray);
+    } else {
+        System.out.println("Blob matches fine!");
     }
 
     cluster.shutdown();
