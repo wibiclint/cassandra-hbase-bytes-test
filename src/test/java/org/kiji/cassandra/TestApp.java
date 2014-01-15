@@ -1,22 +1,22 @@
 package org.kiji.cassandra;
 
-import org.cassandraunit.AbstractCassandraUnit4TestCase;
+import org.cassandraunit.CassandraCQLUnit;
+import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
 import org.cassandraunit.dataset.DataSet;
-import org.cassandraunit.dataset.yaml.ClassPathYamlDataSet;
 import org.junit.Test;
+import org.junit.Rule;
 
 
-public class TestApp extends AbstractCassandraUnit4TestCase {
+public class TestApp {
 
-  @Override
-  public DataSet getDataSet() {
-    return new ClassPathYamlDataSet("data.yaml");
-  }
+  @Rule
+  public CassandraCQLUnit cassandraCQLUnit = new CassandraCQLUnit(new ClassPathCQLDataSet("simple.cql", "mykeyspace"));
 
   @Test
   public void myTest() throws Exception {
-    String[] args = { "localhost"};
-    App.main(args);
+    App myApp = new App();
+    myApp.setup(cassandraCQLUnit.session);
+
   }
 
 }

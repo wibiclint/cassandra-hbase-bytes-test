@@ -21,6 +21,16 @@ public class App {
 
   //private static EmbeddedCassandraService cassandra;
 
+  public void setup(Session session) {
+    this.session = session;
+
+    // Create the keyspace and table
+    session.execute("CREATE KEYSPACE IF NOT EXISTS " + KEYSPACE_NAME +
+        " WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };");
+    session.execute("CREATE TABLE IF NOT EXISTS " + KEYSPACE_NAME + "." + TABLE_NAME + " " +
+        "( name text PRIMARY KEY, name_as_bytes blob );");
+  }
+
   public void setup(String host) throws IOException {
     //cassandra = new EmbeddedCassandraService();
     //cassandra.start();
@@ -31,12 +41,6 @@ public class App {
     cluster = Cluster.builder().addContactPoint(host).withPort(9171).build();
 
     session = cluster.connect();
-
-    // Create the keyspace and table
-    session.execute("CREATE KEYSPACE IF NOT EXISTS " + KEYSPACE_NAME +
-        " WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };");
-    session.execute("CREATE TABLE IF NOT EXISTS " + KEYSPACE_NAME + "." + TABLE_NAME + " " +
-        "( name text PRIMARY KEY, name_as_bytes blob );");
   }
 
   public void insertData(String name) {
