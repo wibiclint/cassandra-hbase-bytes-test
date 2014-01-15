@@ -19,16 +19,16 @@ public class App {
   private Cluster cluster;
   private Session session;
 
-  private static EmbeddedCassandraService cassandra;
+  //private static EmbeddedCassandraService cassandra;
 
-  public void setup() throws IOException {
-    cassandra = new EmbeddedCassandraService();
-    cassandra.start();
+  public void setup(String host) throws IOException {
+    //cassandra = new EmbeddedCassandraService();
+    //cassandra.start();
 
 
     // Connect to the cluster and open a session
     //Cluster cluster = Cluster.builder().addContactPoint("172.16.7.2").build();
-    cluster = Cluster.builder().addContactPoint("localhost").build();
+    cluster = Cluster.builder().addContactPoint(host).withPort(9171).build();
 
     session = cluster.connect();
 
@@ -108,9 +108,10 @@ public class App {
   }
 
   public static void main(String[] args) {
+    String host = args[0];
     App app = new App();
     try {
-      app.setup();
+      app.setup(host);
       String name = "49ers in the superbowl?!";
       app.insertData(name);
       app.readAndCheckData(name);
